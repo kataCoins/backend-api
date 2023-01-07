@@ -1,0 +1,9 @@
+POST http://localhost:8080/code/run
+Accept: application/json
+Content-Type: application/json
+
+{
+  "user_address": "0xa84e69dfa451553698a4A897466Axxxxxxxxxxx",
+  "code": "def sum_two_smallest_numbers(numbers):\n    numbers.sort()\n    return numbers[0] + numbers[1]\n",
+  "kata_id": "af7c1fe6-d669-414e-b066-e9733f0de7a8"
+}
