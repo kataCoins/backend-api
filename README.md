@@ -37,3 +37,8 @@ $ npm run test:cov
 ```
 
 ## Docker (WIP)
+```bash
+docker build . -t kata-coin-api
+
+docker run -d -p8080:8080 --name kata-coin-backend kata-coin-api
+```
