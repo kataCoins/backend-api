@@ -20,7 +20,7 @@ export class CodeController {
     @Req() req,
     @Body() kataRunDto: KataRunDto,
   ): Promise<ExecResultStepDto> {
-    console.log(kataRunDto);
+    // console.log(kataRunDto);
     const data = await this.codeService.runCode(kataRunDto);
     return res.status(200).json(data);
   }
