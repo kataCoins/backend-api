@@ -19,11 +19,11 @@ export class CodeService {
   ) {}
   async runCode(kataRunDto: KataRunDto): Promise<ExecResponseDto> {
     const { user_address, kata_id } = kataRunDto;
-    // try {
-    //   await this.contractService.canExecuteKata(kata_id, user_address);
-    // } catch (e) {
-    //   throw new NotFoundException('User cannot execute this kata');
-    // }
+    try {
+      await this.contractService.canExecuteKata(kata_id, user_address);
+    } catch (e) {
+      throw new NotFoundException('User cannot execute this kata');
+    }
 
     const kataDefinition = await this.contractService.getKata(
       kataRunDto.kata_id,
