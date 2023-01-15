@@ -6,6 +6,7 @@ import { FileUtilsService } from './file-utils.service';
 import { FileStorageService } from './file-storage.service';
 import { ExecResultStepDto } from '../dto/exec/exec-result-step.dto';
 import { ContractService } from '../../contract/contract.service';
+import { ApiInternalServerErrorResponse } from '@nestjs/swagger';
 
 @Injectable()
 export class CodeService {
@@ -16,6 +17,15 @@ export class CodeService {
     private readonly contractService: ContractService,
   ) {}
   async runCode(kataRunDto: KataRunDto): Promise<ExecResultStepDto> {
+    try {
+      await this.contractService.canExecuteKata(
+        kataRunDto.kata_id,
+        kataRunDto.user_address,
+      );
+    } catch (e) {
+      throw new NotFoundException('User cannot execute this kata');
+    }
+
     const kataDefinition = await this.contractService.getKata(
       kataRunDto.kata_id,
     );
@@ -31,11 +41,25 @@ export class CodeService {
       idExec,
     );
 
-    if (!files) return null;
+    if (!files)
+      throw ApiInternalServerErrorResponse({
+        description: 'Error preparing files for execution',
+      });
+
     const execResults = await this.execPythonService.execCode(files, idExec);
     await this.fileStorageService.deleteExecFile(files);
-    if (!execResults) return null;
+    if (!execResults)
+      throw ApiInternalServerErrorResponse({
+        description: 'Error are occurred during execution',
+      });
 
-    return execResults.find((execResult) => execResult.name === 'Test');
+    const result: ExecResultStepDto = execResults.find(
+      (execResult) => execResult.name === 'Test',
+    );
+    if (result.status === 0) {
+      console.log('Test passed');
+      /// TODO valid test and give kata to user
+    }
+    return result;
   }
 }

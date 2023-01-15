@@ -28,4 +28,11 @@ export class ContractService {
     }
     return kata[0] as KataDefinition;
   }
+
+  async canExecuteKata(kataId: number, userAddress: string): Promise<boolean> {
+    const contract = await this.getContract();
+    return await contract.methods.canExecuteKata(userAddress, kataId).call({
+      from: process.env.OWNER_ADDRESS,
+    });
+  }
 }
