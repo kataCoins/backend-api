@@ -5,6 +5,7 @@ import * as ContractData from './data/KataCoins.json';
 import { Contract } from 'web3-eth-contract';
 import { KataDefinition } from './interfaces/kata-definition.interface';
 import * as process from 'process';
+import { SignedTransaction } from 'web3-eth-accounts';
 
 @Injectable()
 export class ContractService {
@@ -33,6 +34,26 @@ export class ContractService {
     const contract = await this.getContract();
     return await contract.methods.canExecuteKata(userAddress, kataId).call({
       from: process.env.OWNER_ADDRESS,
+    });
+  }
+
+  async signTransaction(
+    kataId: number,
+    userAddress: string,
+  ): Promise<SignedTransaction> {
+    const contract = await this.getContract();
+    const client = this.web3Service.getClient('eth');
+    const account = client.eth.accounts.privateKeyToAccount(
+      process.env.OWNER_PRIVATE_KEY,
+    );
+
+    return await account.signTransaction({
+      to: ContractAddress.KataCoins,
+      from: process.env.OWNER_ADDRESS,
+      data: await this.getContract().then((contract) =>
+        contract.methods.transfer(userAddress, kataId).encodeABI(),
+      ),
+      gas: await contract.methods.getExecFee().call(),
     });
   }
 }

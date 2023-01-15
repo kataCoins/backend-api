@@ -7,6 +7,7 @@ import { FileStorageService } from './file-storage.service';
 import { ExecResultStepDto } from '../dto/exec/exec-result-step.dto';
 import { ContractService } from '../../contract/contract.service';
 import { ApiInternalServerErrorResponse } from '@nestjs/swagger';
+import { ExecResponseDto } from '../dto/exec/exec-response.dto';
 
 @Injectable()
 export class CodeService {
@@ -16,15 +17,13 @@ export class CodeService {
     private readonly execPythonService: ExecPythonService,
     private readonly contractService: ContractService,
   ) {}
-  async runCode(kataRunDto: KataRunDto): Promise<ExecResultStepDto> {
-    try {
-      await this.contractService.canExecuteKata(
-        kataRunDto.kata_id,
-        kataRunDto.user_address,
-      );
-    } catch (e) {
-      throw new NotFoundException('User cannot execute this kata');
-    }
+  async runCode(kataRunDto: KataRunDto): Promise<ExecResponseDto> {
+    const { user_address, kata_id } = kataRunDto;
+    // try {
+    //   await this.contractService.canExecuteKata(kata_id, user_address);
+    // } catch (e) {
+    //   throw new NotFoundException('User cannot execute this kata');
+    // }
 
     const kataDefinition = await this.contractService.getKata(
       kataRunDto.kata_id,
@@ -58,8 +57,19 @@ export class CodeService {
     );
     if (result.status === 0) {
       console.log('Test passed');
-      /// TODO valid test and give kata to user
+      const transaction = await this.contractService.signTransaction(
+        kata_id,
+        user_address,
+      );
+      console.log('Transaction signed', transaction);
+      return {
+        exec_result: result,
+        signed_transaction: transaction,
+      };
     }
-    return result;
+    return {
+      exec_result: result,
+      signed_transaction: undefined,
+    };
   }
 }
