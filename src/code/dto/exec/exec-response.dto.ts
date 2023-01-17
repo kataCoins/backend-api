@@ -7,8 +7,4 @@ export class ExecResponseDto {
   @IsDefined()
   @Expose()
   exec_result: ExecResultStepDto;
-
-  @IsOptional()
-  @Expose()
-  signed_transaction?: SignedTransaction;
 }

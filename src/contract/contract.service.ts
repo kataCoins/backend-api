@@ -30,9 +30,16 @@ export class ContractService {
     return kata[0] as KataDefinition;
   }
 
-  async canExecuteKata(kataId: number, userAddress: string): Promise<boolean> {
+  async executeKata(kataId: number, userAddress: string): Promise<void> {
     const contract = await this.getContract();
-    return await contract.methods.canExecuteKata(userAddress, kataId).call({
+    return contract.methods.executeKata(userAddress, kataId).call({
+      from: process.env.OWNER_ADDRESS,
+    });
+  }
+
+  async setKataSolved(kataId: number, userAddress: string): Promise<void> {
+    const contract = await this.getContract();
+    return contract.methods.setHasSolvedKata(userAddress, kataId).call({
       from: process.env.OWNER_ADDRESS,
     });
   }
