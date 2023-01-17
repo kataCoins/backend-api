@@ -22,7 +22,7 @@ export class CodeService {
     try {
       await this.contractService.executeKata(kata_id, user_address);
     } catch (e) {
-      throw new NotFoundException('User cannot execute this kata');
+      throw new NotFoundException('User cannot execute this kata' + e);
     }
 
     const kataDefinition = await this.contractService.getKata(
