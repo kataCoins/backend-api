@@ -10,7 +10,7 @@ export class ContractService {
   constructor(private readonly web3Service: Web3Service) {}
 
   private async getContract(): Promise<Contract> {
-    const client = this.web3Service.getClient('matic');
+    const client = this.web3Service.getClient('eth');
     const { abi } = ContractData;
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
