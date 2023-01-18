@@ -5,6 +5,7 @@ import { CodeModule } from './code/code.module';
 import { ConfigModule } from '@nestjs/config';
 import { ContractModule } from './contract/contract.module';
 import { Web3Module } from 'nest-web3';
+import * as process from 'process';
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import { Web3Module } from 'nest-web3';
     }),
     Web3Module.forRoot({
       name: 'eth',
-      url: 'http://127.0.0.1:8545',
+      url: process.env.WEB3_URL,
     }),
     CodeModule,
     ContractModule,
