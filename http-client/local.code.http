@@ -3,7 +3,7 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "user_address": "0xa84e69dfa451553698a4A897466Axxxxxxxxxxx",
+  "user_address": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
   "code": "def sum_two_smallest_numbers(numbers):\n    numbers.sort()\n    return numbers[0] + numbers[1]\n",
-  "kata_id": "af7c1fe6-d669-414e-b066-e9733f0de7a8"
+  "kata_id": "0"
 }

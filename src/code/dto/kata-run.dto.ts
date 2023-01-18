@@ -1,4 +1,4 @@
-import { IsDefined, IsNotEmpty, IsString } from 'class-validator';
+import { IsDefined, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class KataRunDto {
@@ -21,8 +21,8 @@ export class KataRunDto {
   @ApiProperty({
     example: 'af7c1fe6-d669-414e-b066-e9733f0de7a8',
   })
-  @IsString()
+  @IsNumber()
   @IsDefined()
   @IsNotEmpty()
-  kata_id: string;
+  kata_id: number;
 }
