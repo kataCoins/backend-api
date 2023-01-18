@@ -14,7 +14,7 @@ import * as process from 'process';
       isGlobal: true,
     }),
     Web3Module.forRoot({
-      name: 'eth',
+      name: 'matic',
       url: process.env.WEB3_URL,
     }),
     CodeModule,
