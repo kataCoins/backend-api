@@ -29,16 +29,38 @@ export class ContractService {
   }
 
   async executeKata(kataId: number, userAddress: string): Promise<void> {
-    const contract = await this.getContract();
-    return contract.methods.executeKata(userAddress, kataId).send({
+    const client = this.web3Service.getClient('eth');
+    const account = client.eth.accounts.privateKeyToAccount(
+      process.env.OWNER_PRIVATE_KEY,
+    );
+
+    const transaction = await account.signTransaction({
+      to: process.env.CONTRACT_ADDRESS,
       from: process.env.OWNER_ADDRESS,
+      data: await this.getContract().then((contract) =>
+        contract.methods.executeKata(userAddress, kataId).encodeABI(),
+      ),
+      gas: 100_000,
     });
+
+    await client.eth.sendSignedTransaction(transaction.rawTransaction);
   }
 
   async setKataSolved(kataId: number, userAddress: string): Promise<void> {
-    const contract = await this.getContract();
-    return contract.methods.setHasSolvedKata(userAddress, kataId).send({
+    const client = this.web3Service.getClient('eth');
+    const account = client.eth.accounts.privateKeyToAccount(
+      process.env.OWNER_PRIVATE_KEY,
+    );
+
+    const transaction = await account.signTransaction({
+      to: process.env.CONTRACT_ADDRESS,
       from: process.env.OWNER_ADDRESS,
+      data: await this.getContract().then((contract) =>
+        contract.methods.setHasSolvedKata(userAddress, kataId).encodeABI(),
+      ),
+      gas: 100_000,
     });
+
+    await client.eth.sendSignedTransaction(transaction.rawTransaction);
   }
 }
